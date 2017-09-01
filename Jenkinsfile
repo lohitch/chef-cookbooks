@@ -6,18 +6,15 @@ node {
         stage ('Clone') {
         	checkout scm
         }
-        stage ('Build') {
-        	sh "cd /var/lib/jenkins/workspace/chef_cookbooks/lc_apache2 && foodcritic ."
-        }
         stage ('Tests') {
 	        parallel 'static': {
-	            sh "cd /var/lib/jenkins/workspace/chef_cookbooks/lc_apache2 && chef exec rspec spec/"
+	            sh "cd /var/lib/jenkins/workspace/chef_cookbooks/lc_apache2 && foodcritic ."
 	        },
 	        'unit': {
-	            sh "echo 'shell scripts to run unit tests...'"
+	            sh "cd /var/lib/jenkins/workspace/chef_cookbooks/lc_apache2 && chef exec rspec spec/"
 	        },
 	        'integration': {
-	            sh "echo 'shell scripts to run integration tests...'"
+	            sh "cd /var/lib/jenkins/workspace/chef_cookbooks/lc_apache2 && kitchen verify"
 	        }
         }
       	stage ('Deploy') {
