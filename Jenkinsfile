@@ -7,11 +7,11 @@ node {
         	checkout scm
         }
         stage ('Build') {
-        	sh "foodcritic lc_apache2/"
+        	sh "cd /var/lib/jenkins/workspace/chef_cookbooks/lc_apache2 && foodcritic ."
         }
         stage ('Tests') {
 	        parallel 'static': {
-	            sh "chef exec rspec lc_apache2/spec/"
+	            sh "cd /var/lib/jenkins/workspace/chef_cookbooks/lc_apache2 && chef exec rspec spec/"
 	        },
 	        'unit': {
 	            sh "echo 'shell scripts to run unit tests...'"
