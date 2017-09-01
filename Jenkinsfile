@@ -6,20 +6,16 @@ node {
         stage ('Clone') {
         	checkout scm
         }
-        stage ('Tests') {
-	        parallel 'static': {
-	            sh "cd /var/lib/jenkins/workspace/chef_cookbooks/lc_apache2 && foodcritic ."
-	        },
-	        'unit': {
-	            sh "cd /var/lib/jenkins/workspace/chef_cookbooks/lc_apache2 && chef exec rspec spec/"
-	        },
-	        'integration': {
-	            sh "cd /var/lib/jenkins/workspace/chef_cookbooks/lc_apache2 && kitchen verify"
-	        }
-        }
-      	stage ('Deploy') {
-            sh "echo 'shell scripts to deploy to server...'"
+        stage ('SCA') {
+	    sh "cd /var/lib/jenkins/workspace/chef_cookbooks/lc_apache2 && foodcritic ."
+	}
+      	stage ('Unit Test') {
+            sh "cd /var/lib/jenkins/workspace/chef_cookbooks/lc_apache2 && chef exec rspec spec/"
       	}
+
+        stage ('Integration Test') {
+            sh "cd /var/lib/jenkins/workspace/chef_cookbooks/lc_apache2 && kitchen verify"
+        }
     } catch (err) {
         currentBuild.result = 'FAILED'
         throw err
